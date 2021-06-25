@@ -39,7 +39,7 @@ public abstract class Menu {
             }
             // quit the game - such a shame
             case "2": {
-                System.out.println("So... you've chosen to quit the game without even trying? so be it!");
+                System.out.println("So... You've chosen to quit the game without even trying? So be it!");
                 break;
             }
             //invokes enableGraphics method which prints some high level graphics
@@ -347,7 +347,7 @@ public abstract class Menu {
         String currentMenu = ("""
                 Create your parties:
                  1. Manage parties size
-                 2. Manage characters 
+                 2. Manage characters
                  3. Export parties to a file
                  4. Go back
                  5. Quit
