@@ -58,7 +58,7 @@ public abstract class Menu {
         console.close();
     }
 
-    //Graphics enabled menu which invoke some sophisticated, top notch, super duper interactive (not really),  high level ASCII art
+    //Layer2Graphics enabled menu which invoke some sophisticated, top notch, super duper interactive (not really),  high level ASCII art
     public static void enableGraphics(){
         System.out.println("""
                                       (      )\s
@@ -112,6 +112,7 @@ public abstract class Menu {
             }
             //if user wants to repeat the graphics, so lets loop back to start of this method
             case "enableGraphics": Menu.enableGraphics();
+            //every other case we move user to main menu
             default: {
                 System.out.println("that's not a valid choice, let me help you!");
                 menuChoice = console.next();
@@ -207,7 +208,7 @@ public abstract class Menu {
         console.close();
     }
 
-    //Layer3 of the menu -- generate random parties
+    //Layer3 -- generate random parties
     public static void randomPartyCreatorMenu() {
         int firstPartySize;
         int secondPartySize;
@@ -339,7 +340,7 @@ public abstract class Menu {
         }
     }
 
-    //Layer3 of the menu -- generate custom parties
+    //Layer3 -- generate custom parties
     public static void customPartyCreatorMenu() {
         int firstPartySize;
         int secondPartySize;
@@ -470,17 +471,25 @@ public abstract class Menu {
             }
         }
     }
-    //Layer3 ImportMenu
+
+    //Layer3 -- ImportMenu
     public static void importMenu() {
         System.out.println("Import menu is not ready!");
     }
-    //Layer3 ExportMenu
+
+    //Layer3 -- ExportMenu
     public static void exportMenu() {
         System.out.println("Export menu is not ready!");
     }
-    //Layer4 BattleMenu
+
+    //Layer4 -- BattleMenu
     public static void battleMenu() {
         System.out.println("Battle menu is not ready!");
+    }
+
+    //Layer4 -- BattleMenu
+    public static void graveyardMenu() {
+        System.out.println("Graveyard menu is not ready!");
     }
 
 }
