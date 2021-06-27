@@ -8,6 +8,22 @@ public class Warrior extends Character {
     this.strength = strength;
   }
 
+  @Override
+  public String toString() {
+    return "Warrior{"
+        + "id="
+        + getId().toString().substring(1, 8)
+        + ", Name="
+        + getName()
+        + ", hp="
+        + getHp()
+        + ", stam="
+        + stamina
+        + ", str="
+        + strength
+        + '}';
+  }
+
   public int getStamina() {
     return stamina;
   }

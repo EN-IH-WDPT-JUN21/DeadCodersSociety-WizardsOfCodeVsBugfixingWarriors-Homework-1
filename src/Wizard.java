@@ -8,6 +8,22 @@ public class Wizard extends Character {
     this.intelligence = intelligence;
   }
 
+  @Override
+  public String toString() {
+    return "Wizard{"
+        + "id="
+        + getId().toString().substring(1, 8)
+        + ", Name="
+        + getName()
+        + ", hp="
+        + getHp()
+        + ", mana="
+        + mana
+        + ", int="
+        + intelligence
+        + '}';
+  }
+
   public int getMana() {
     return mana;
   }

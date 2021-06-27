@@ -1,9 +1,9 @@
 import java.util.UUID;
 
 abstract class Character {
-  UUID id;
-  String Name;
-  int hp;
+  private UUID id;
+  private String Name;
+  private int hp;
 
   public Character(String name, int hp) {
     this.id = UUID.randomUUID();
