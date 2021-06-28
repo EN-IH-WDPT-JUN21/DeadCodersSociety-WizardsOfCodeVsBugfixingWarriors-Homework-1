@@ -1,6 +1,4 @@
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -10,108 +8,6 @@ public class Menu {
     private static List<Character> firstParty;
     private static List<Character> secondParty;
 
-
-
-    //export parties to csv files
-    public static void exportPartiesToCSV() throws IOException {
-        FileWriter csvWriter = null;
-        try {
-            csvWriter = new FileWriter("firstParty.csv");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        for (Character ch : firstParty) {
-            if (firstParty.get(firstParty.indexOf(ch)).getClass()==Wizard.class){
-                Wizard wiz1= (Wizard) firstParty.get(firstParty.indexOf(ch));
-                csvWriter.append(wiz1.exportCharacter());
-                csvWriter.append("\n");
-            }else {
-                Warrior war1= (Warrior) firstParty.get(firstParty.indexOf(ch));
-                csvWriter.append(war1.exportCharacter());
-                csvWriter.append("\n");
-            }
-        }
-        csvWriter.flush();
-        csvWriter.close();
-
-        try {
-            csvWriter = new FileWriter("secondParty.csv");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        for (Character ch : secondParty) {
-            if (secondParty.get(secondParty.indexOf(ch)).getClass()==Wizard.class){
-                Wizard wiz1= (Wizard) secondParty.get(secondParty.indexOf(ch));
-                csvWriter.append(wiz1.exportCharacter());
-                csvWriter.append("\n");
-            }else {
-                Warrior war1= (Warrior) secondParty.get(secondParty.indexOf(ch));
-                csvWriter.append(war1.exportCharacter());
-                csvWriter.append("\n");
-            }
-        }
-        csvWriter.flush();
-        csvWriter.close();
-    }
-    //import parties from csv files
-    public static void importPartiesFromCSV() throws IOException {
-        List<Character> party1 = new ArrayList<>();
-        List<Character> party2 = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("firstParty.csv"))) {
-            String line;
-            while ((line = br.readLine()) != null && !line.equals("")) {
-                String[] values = line.split(";");
-                String[] v=values[0].split(",");
-
-                if (v[0].equals("Wizard")) {
-                    Wizard w1=new Wizard(v[1], Integer.parseInt(v[2]), Integer.parseInt(v[3]), Integer.parseInt(v[4]));
-                    party1.add(w1);
-                } else{
-                    Warrior w1=new Warrior(v[1], Integer.parseInt(v[2]), Integer.parseInt(v[3]), Integer.parseInt(v[4]));
-                    party1.add(w1);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try (BufferedReader br = new BufferedReader(new FileReader("secondParty.csv"))) {
-            String line;
-            while ((line = br.readLine()) != null && !line.equals("")) {
-                String[] values = line.split(";");
-                String[] v=values[0].split(",");
-                if (v[0].equals("Wizard" )) {
-                    Wizard w1=new Wizard(v[1], Integer.parseInt(v[2]), Integer.parseInt(v[3]), Integer.parseInt(v[4]));
-                    party2.add(w1);
-                } else{
-                    Warrior w1=new Warrior(v[1], Integer.parseInt(v[2]), Integer.parseInt(v[3]), Integer.parseInt(v[4]));
-                    party2.add(w1);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        firstParty=party1;
-        secondParty=party2;
-    }
-/*
-    public static void currentParties(List<Character> party1, List<Character> party2) {
-        firstParty = party1;
-        secondParty = party2;
-    }
-    public List<Character> getFirstParty() {
-        return firstParty;
-    }
-    public void setFirstParty(List<Character> firstParty) {
-        this.firstParty = firstParty;
-    }
-    public List<Character> getSecondParty() {
-        return secondParty;
-    }
-    public void setSecondParty(List<Character> secondParty) {
-        this.secondParty = secondParty;
-    }
-*/
     //Layer1 -- mainMenu which will print the first screen and allow the user to choose next step
     public static void mainMenu() {
         Scanner console = new Scanner(System.in);
@@ -239,7 +135,7 @@ public class Menu {
                 For the battle to commence we need to create two parties.
                 How would you like to do it?
                  1. Generate random parties
-                 2. Create custom parties
+                 2. Modify current or create custom parties
                  3. Import parties from a file
                  4. Start Battle!
                  5. Go back
@@ -311,10 +207,9 @@ public class Menu {
                 break;
             }
             case "enableGraphics": {
-                System.out.println("seriously?! this was one time offer! there are no more graphics in this game, so stop looking for them!");
+                System.out.println("Haha! No graphics here!");
                 menuChoice = console.next();
-                console.close();
-                Menu.mainMenu();
+                Menu.partyCreatorMenu();
                 break;
             }
             //another easter egg for people trying to break the code
@@ -354,7 +249,7 @@ public class Menu {
         String menuChoice = console.next();
 
         //valid options
-        String[] mainMenuOptions = {"1", "2","3", "4", "enableGraphics", "imagination"};
+        String[] mainMenuOptions = {"1", "2","3", "4","5", "enableGraphics", "imagination"};
 
         //check if the input is one of the valid options
         boolean validMainMenuOption = Arrays.stream(mainMenuOptions).anyMatch(menuChoice::equals);
@@ -369,7 +264,7 @@ public class Menu {
 
         // valid options decision tree
         switch (menuChoice) {
-            //invoke the random generation menu
+            //Generate random parties up to limit size
             case "1": {
                 //invoke method to create random parties
                 var nameGen = new NameListGenerator("names.csv");
@@ -399,7 +294,6 @@ public class Menu {
                 Menu.randomPartyCreatorMenu();
                 break;
                 }
-
             //Decide party sizes
             case "2": {
                 var nameGen = new NameListGenerator("names.csv");
@@ -452,17 +346,22 @@ public class Menu {
                 Menu.randomPartyCreatorMenu();
                 break;
             }
-            //invoke export to file menu
-            case "3": {
-                System.out.println("Parties exported to files");
+            //export parties to files
+            case "3":{
+                if (firstParty== null || firstParty.size() == 0|| secondParty== null || secondParty.size() == 0 ){
+                    System.out.println("You need to create parties first!");
+                    Menu.partyCreatorMenu();
+                    break;
+                }else {
                 try {
                     Menu.exportPartiesToCSV();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                System.out.println("Parties exported to files");
                 Menu.randomPartyCreatorMenu();
-                break;
-            }
+                break;}
+                }
             case "4": {
                 if (firstParty== null || firstParty.size() == 0|| secondParty== null || secondParty.size() == 0 ){
                     System.out.println("You need to create parties first!");
@@ -530,24 +429,23 @@ public class Menu {
         }
     }
 
-    //Layer3 -- generate custom parties
+    //Layer3 -- create custom parties
     public static void customPartyCreatorMenu() {
         int firstPartySize;
         int secondPartySize;
         Scanner console = new Scanner(System.in);
         String currentMenu = ("""
                 Create your parties:
-                 1. Manage parties size
-                 2. Manage characters
-                 3. Export parties to a file
-                 4. Go back
-                 5. Quit
+                 1. Modify current parties
+                 2. Export parties to a file
+                 3. Go back
+                 4. Quit
                 """);
         System.out.print(currentMenu);
         String menuChoice = console.next();
 
         //valid options
-        String[] mainMenuOptions = {"1", "2","3", "4", "enableGraphics", "imagination"};
+        String[] mainMenuOptions = {"1", "2","3", "4","5", "enableGraphics", "imagination"};
 
         //check if the input is one of the valid options
         boolean validMainMenuOption = Arrays.stream(mainMenuOptions).anyMatch(menuChoice::equals);
@@ -562,57 +460,128 @@ public class Menu {
 
         // valid options decision tree
         switch (menuChoice) {
-            // set party sizes
+            // modify current parties
             case "1": {
-                System.out.println("Set size for the first party");
-                String size=console.next();
-                //loop while user input is invalid type or party size is <=0
-                while (!Main.isNumeric(size) || Integer.parseInt(size)<=0) {
-                    System.out.println("This is not a valid party size! Try again!");
-                    size=console.next();
+                //check if first party is null
+                List<Character> party1 = new ArrayList<>();
+                if (firstParty != null) {
+                    party1 = firstParty;
                 }
-                //call the party.setSize method for the first team
-                System.out.println("First party size was set to: "+size);
-                firstPartySize=Integer.parseInt(size);
-                //set second party size
-                System.out.println("Set size for the second party");
-                size=console.next();
-                //loop while user input is invalid type or party size is <=0
-                while (!Main.isNumeric(size) || Integer.parseInt(size)<=0) {
-                    System.out.println("This is not a valid party size! Try again!");
-                    size=console.next();
+                System.out.println("firstParty has following characters:");
+                // loop through party members and decide if remove them
+                if (party1 != null) {
+                    for (int i = 0; i < party1.size(); i++) {
+                        System.out.println(party1.get(i).toString());
+                        System.out.println("""
+                                What fo you want to do with this character?
+                                1.Remove
+                                2.Leave as is
+                                """);
+                        menuChoice = console.next();
+                        if (menuChoice.equals("1")) {
+                            party1.remove(i);
+                            i-=1;
+                            System.out.println("Character removed");
+                        }
+                    }
                 }
-                //call the party.setSize method for the second team
-                System.out.println("Second party size was set to: "+size);
-                firstPartySize=Integer.parseInt(size);
-                //go back to the customPartyCreatorMenu
+                //possibility to add a new character
+                boolean newCharacter = true;
+                while (newCharacter == true) {
+                    System.out.println("""
+                            Do you want to add new character to first party?
+                            1. Add Warrior
+                            2. Add Wizard
+                            3. Move to second party
+                            """);
+                    menuChoice = console.next();
+                    if (menuChoice.equals("1")) {
+                        party1.add(Menu.createNewWarrior());
+                        System.out.println("New character added: " + party1.get(party1.size() - 1).toString());
+                    } else if (menuChoice.equals("2")) {
+                        party1.add(Menu.createNewWizard());
+                        System.out.println("New character added: " + party1.get(party1.size() - 1).toString());
+                    } else {
+                        newCharacter = false;
+                    }
+                }
+
+                List<Character> party2 = new ArrayList<>();
+                if (secondParty != null) {
+                    party2 = secondParty;
+                }
+                System.out.println("secondParty has following characters:");
+                // loop through party members and decide if they should be removed
+                if (party2 != null) {
+                    for (int i = 0; i < party2.size(); i++) {
+                        System.out.println(party2.get(i).toString());
+                        System.out.println("""
+                                What fo you want to do with this character?
+                                1.Remove
+                                2.Leave as is
+                                """);
+                        menuChoice = console.next();
+                        if (menuChoice.equals("1")) {
+                            party2.remove(i);
+                            i-=1;
+                            System.out.println("Character removed");
+                        }
+                    }
+                }
+                //possibility to add a new character
+                boolean newCharacter2 = true;
+                while (newCharacter2 == true) {
+                    System.out.println("""
+                            Do you want to add new character to second party?
+                            1. Add Warrior
+                            2. Add Wizard
+                            3. End editing parties
+                            """);
+                    menuChoice = console.next();
+                    if (menuChoice.equals("1")) {
+                        party2.add(Menu.createNewWarrior());
+                        System.out.println("New character added: " + party2.get(party2.size() - 1).toString());
+                    } else if (menuChoice.equals("2")) {
+                        party2.add(Menu.createNewWizard());
+                        System.out.println("New character added: " + party2.get(party2.size() - 1).toString());
+                    } else {
+                        newCharacter2 = false;
+                    }
+                }
+                //update main parties and go back to the menu
+                firstParty=party1;
+                secondParty=party2;
                 Menu.customPartyCreatorMenu();
                 break;
             }
-            //Manage characters
+            //export parties to csv
             case "2": {
-                //Insert 2 loops to create/modify characters in both parties
-                System.out.println("Here will be the option to customise your characters");
-                //go back to the customPartyCreatorMenu
-                Menu.customPartyCreatorMenu();
-                break;
-            }
-            //invoke export file menu
-            case "3": {
-                System.out.println("Let's export this parties");
-                Menu.exportMenu();
-                break;
+                if (firstParty== null || firstParty.size() == 0|| secondParty== null || secondParty.size() == 0 ){
+                    System.out.println("You need to create parties first!");
+                    Menu.partyCreatorMenu();
+                    break;
+                }else {
+                    try {
+                        Menu.exportPartiesToCSV();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //confirm and go back to menu
+                    System.out.println("Parties exported to files");
+                    Menu.customPartyCreatorMenu();
+                    break;}
             }
             //go back to partyCreatorMenu
-            case "4": {
+            case "3": {
                 partyCreatorMenu();
                 break;
             }
             //quit the game - only for losers... and maybe beta testers
-            case "5": {
+            case "4": {
                 System.out.println("Looser!");
                 break;
             }
+            //Easter egg cow
             case "enableGraphics": {
                 System.out.println("You really are stubborn, you know?!");
                 menuChoice = console.next();
@@ -653,7 +622,6 @@ public class Menu {
                 Menu.mainMenu();
                 break;
             }
-
             default: {
                 System.out.println("This is not a valid option");
                 Menu.partyCreatorMenu();
@@ -662,24 +630,128 @@ public class Menu {
         }
     }
 
-    //Layer3 -- ImportMenu
-    public static void importMenu() {
-        System.out.println("Import menu is not ready!");
-    }
-
-    //Layer3 -- ExportMenu
-    public static void exportMenu() {
-        System.out.println("Export menu is not ready!");
-    }
-
     //Layer4 -- BattleMenu
     public static void battleMenu() {
         System.out.println("Battle menu is not ready!");
     }
 
-    //Layer4 -- BattleMenu
+    //Layer4 -- GraveyardMenu
     public static void graveyardMenu() {
         System.out.println("Graveyard menu is not ready!");
+    }
+
+    //create custom Warrior
+    public static Warrior createNewWarrior(){
+        Scanner console = new Scanner(System.in);
+        System.out.println("Set name");
+        String name = console.next();
+        System.out.println("Set hp");
+        int hp = Integer.parseInt(console.next());
+        System.out.println("Set stamina");
+        int stamina = Integer.parseInt(console.next());
+        System.out.println("Set strength");
+        int strength = Integer.parseInt(console.next());
+        Warrior w1=new Warrior(name, hp, stamina, strength);
+        return w1;
+    }
+
+    //create custom Wizard
+    public static Wizard createNewWizard(){
+        Scanner console = new Scanner(System.in);
+        System.out.println("Set name");
+        String name = console.next();
+        System.out.println("Set hp");
+        int hp = Integer.parseInt(console.next());
+        System.out.println("Set mana");
+        int mana = Integer.parseInt(console.next());
+        System.out.println("Set intelligence");
+        int intelligence = Integer.parseInt(console.next());
+        Wizard w1=new Wizard(name, hp, mana, intelligence);
+        return w1;
+    }
+
+    //export parties to csv files
+    public static void exportPartiesToCSV() throws IOException {
+        FileWriter csvWriter = null;
+        //loop through first file and create valid class objects
+        try {
+            csvWriter = new FileWriter("firstParty.csv");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (Character ch : firstParty) {
+            if (firstParty.get(firstParty.indexOf(ch)).getClass()==Wizard.class){
+                Wizard wiz1= (Wizard) firstParty.get(firstParty.indexOf(ch));
+                csvWriter.append(wiz1.exportCharacter());
+            }else {
+                Warrior war1= (Warrior) firstParty.get(firstParty.indexOf(ch));
+                csvWriter.append(war1.exportCharacter());
+            }
+            csvWriter.append("\n");
+        }
+        csvWriter.flush();
+        csvWriter.close();
+
+        //loop through second file and create valid class objects
+        try {
+            csvWriter = new FileWriter("secondParty.csv");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (Character ch : secondParty) {
+            if (secondParty.get(secondParty.indexOf(ch)).getClass()==Wizard.class){
+                Wizard wiz1= (Wizard) secondParty.get(secondParty.indexOf(ch));
+                csvWriter.append(wiz1.exportCharacter());
+            }else {
+                Warrior war1= (Warrior) secondParty.get(secondParty.indexOf(ch));
+                csvWriter.append(war1.exportCharacter());
+            }
+            csvWriter.append("\n");
+        }
+        csvWriter.flush();
+        csvWriter.close();
+    }
+
+    //import parties from csv files
+    public static void importPartiesFromCSV() throws IOException {
+        List<Character> party1 = new ArrayList<>();
+        List<Character> party2 = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("firstParty.csv"))) {
+            String line;
+            while ((line = br.readLine()) != null && !line.equals("")) {
+                String[] values = line.split(";");
+                String[] v=values[0].split(",");
+
+                if (v[0].equals("Wizard")) {
+                    Wizard w1=new Wizard(v[1], Integer.parseInt(v[2]), Integer.parseInt(v[3]), Integer.parseInt(v[4]));
+                    party1.add(w1);
+                } else{
+                    Warrior w1=new Warrior(v[1], Integer.parseInt(v[2]), Integer.parseInt(v[3]), Integer.parseInt(v[4]));
+                    party1.add(w1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader("secondParty.csv"))) {
+            String line;
+            while ((line = br.readLine()) != null && !line.equals("")) {
+                String[] values = line.split(";");
+                String[] v=values[0].split(",");
+                if (v[0].equals("Wizard" )) {
+                    Wizard w1=new Wizard(v[1], Integer.parseInt(v[2]), Integer.parseInt(v[3]), Integer.parseInt(v[4]));
+                    party2.add(w1);
+                } else{
+                    Warrior w1=new Warrior(v[1], Integer.parseInt(v[2]), Integer.parseInt(v[3]), Integer.parseInt(v[4]));
+                    party2.add(w1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        firstParty=party1;
+        secondParty=party2;
     }
 
 }
