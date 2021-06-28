@@ -23,6 +23,14 @@ public class Wizard extends Character {
         + intelligence
         + '}';
   }
+  public String exportCharacter() {
+    return "Wizard,"
+//            + getId().toString().substring(1, 8)+","
+            + getName()+","
+            + getHp()+","
+            + mana+","
+            + intelligence;
+  }
 
   public int getMana() {
     return mana;

@@ -34,4 +34,6 @@ abstract class Character {
   public boolean isAlive() {
     return hp > 0;
   }
+
+
 }

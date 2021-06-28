@@ -24,6 +24,16 @@ public class Warrior extends Character {
         + '}';
   }
 
+  public String exportCharacter() {
+    return "Warrior,"
+//            + getId().toString().substring(1, 8)+","
+            + getName()+","
+            + getHp()+","
+            + stamina+","
+            + strength;
+  }
+
+
   public int getStamina() {
     return stamina;
   }
@@ -39,4 +49,5 @@ public class Warrior extends Character {
   public void setStrength(int strength) {
     this.strength = strength;
   }
+
 }
