@@ -1,8 +1,7 @@
 import java.io.*;
-import java.util.Scanner;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class Menu {
     private static List<Character> firstParty;
@@ -57,31 +56,8 @@ public class Menu {
 
     //Layer2Graphics enabled menu which invoke some sophisticated, top notch, super duper interactive (not really),  high level ASCII art
     public static void enableGraphics(){
-        System.out.println("""
-                                      (      )\s
-                                      ~(^^^^)~\s
-                                       ) @@ \\~_          |\\\s
-                                      /     | \\        \\~ /\s
-                                     ( 0  0  ) \\        | |\s
-                                      ---___/~  \\       | |\s
-                                       /'__/ |   ~-_____/ |\s
-                        o          _   ~----~      ___---~\s
-                          O       //     |         |\s
-                                 ((~\\  _|         -|\s
-                           o  O //-_ \\/ |        ~  |\s
-                                ^   \\_ /         ~  |\s
-                                       |          ~ |\s
-                                       |     /     ~ |\s
-                                       |     (       |\s
-                                        \\     \\      / \\\s
-                                       / -_____-\\   \\ ~~-*\s
-                                       |  /       \\  \\\s
-                                       / /         / /\s
-                                     /~  |       /~  |\s
-                                     ~~~~        ~~~~\s
-        That's enough graphics for you! Now use imagination!
-        1. Go back to menu.
-        """);
+        //Print graphic
+        Graphics.graphics1();
         //Allow User to go back to the mainMenu
         Scanner console = new Scanner(System.in);
         String menuChoice = console.next();
@@ -254,8 +230,8 @@ public class Menu {
                 List<Character> party2 = new ArrayList<>();
 
                 //generate random party size, up to 20 characters in each party
-                int p1Size = (int) (Math.random() * 20);
-                int p2Size = (int) (Math.random() * 20);
+                int p1Size = (int) ((Math.random() * (20-1)) + 1);
+                int p2Size = (int) ((Math.random() * (20-1)) + 1);
 
                 //populate the party1
                 for (int i = 1; i <= p1Size; i++) {
@@ -285,7 +261,7 @@ public class Menu {
                 System.out.println("Set size for the first party");
                 String size = console.next();
                 //loop while user input is invalid type or party size is <=0
-                while (!Main.isNumeric(size) || Integer.parseInt(size) <= 0) {
+                while (Main.isNumeric(size) || Integer.parseInt(size) <= 0) {
                     System.out.println("This is not a valid party size! Try again!");
                     size = console.next();
                 }
@@ -297,7 +273,7 @@ public class Menu {
                 size = console.next();
 
                 //loop while user input is invalid type or party size is <=0
-                while (!Main.isNumeric(size) || Integer.parseInt(size) <= 0) {
+                while (Main.isNumeric(size) || Integer.parseInt(size) <= 0) {
                     System.out.println("This is not a valid party size! Try again!");
                     size = console.next();
                 }
@@ -367,23 +343,7 @@ public class Menu {
                 console.next();
                 System.out.println("But this stubbornness requires an award... yet as a punishment, you need to go back to main menu ;)");
                 console.next();
-                System.out.println("""
-                                     /)  (\\ \s
-                                .-._((,~~.))_.-, \s
-                                 `=.   99   ,=' \s
-                                   / ,o~~o. \\ \s
-                                  { { .__. } } \s
-                                   ) `~~~\\' ( \s
-                                  /`-._  _\\.-\\ \s
-                                 /         )  \\ \s
-                               ,-X        #   X-. \s
-                              /   \\          /   \\ \s
-                             (     )| |  | |(     ) \s
-                              \\   / | |  | | \\   / \s
-                               \\_(.-( )--( )-.)_/ \s
-                               /_,\\ ) /  \\ ( /._\\ \s
-                                   /_,\\  /._\\ \s
-                        """);
+                Graphics.graphics2();
                 console.next();
                 Menu.mainMenu();
             }
@@ -403,6 +363,7 @@ public class Menu {
                 Menu.partyCreatorMenu();
             }
         }
+        console.close();
     }
 
     //Layer3 -- create custom parties
@@ -446,7 +407,7 @@ public class Menu {
                 for (int i = 0; i < party1.size(); i++) {
                     System.out.println(party1.get(i).toString());
                     System.out.println("""
-                            What fo you want to do with this character?
+                            Do you want to remove this character?
                             1.Remove
                             2.Leave as is
                             """);
@@ -553,28 +514,7 @@ public class Menu {
                 console.next();
                 System.out.println("Ok, last one!");
                 console.next();
-                System.out.println("""
-                               /( ,,,,, )\\  \s
-                              _\\,;;;;;;;,/_ \s
-                           .-"; ;;;;;;;;; ;"-. \s
-                           '.__/`_ / \\ _`\\__.' \s
-                              | (')| |(') | \s
-                              | .--' '--. | \s
-                              |/ o     o \\| \s
-                              |           | \s
-                             / \\ _..=.._ / \\ \s
-                            /:. '._____.'   \\ \s
-                           ;::'    / \\      .; \s
-                           |     _|_ _|_   ::| \s
-                         .-|     '==o=='    '|-. \s
-                        /  |  . /       \\    |  \\ \s
-                        |  | ::|         |   | .| \s
-                        |  (  ')         (.  )::| \s
-                        |: |   |; U U U ;|:: | `| \s
-                        |' |   | \\ U U / |'  |  | \s
-                        ##V|   |_/`" "`\\_|   |V## \s
-                           U# ##         ##V## \s
-                                  """);
+                Graphics.graphics3();
                 console.next();
                 Menu.mainMenu();
             }
@@ -592,11 +532,113 @@ public class Menu {
                 Menu.partyCreatorMenu();
             }
         }
+        console.close();
     }
 
     //Layer4 -- BattleMenu
     public static void battleMenu() {
-        System.out.println("Battle menu is not ready!");
+        Scanner console = new Scanner(System.in);
+        String currentMenu = ("""
+                Select mode for your battle:
+                 1. Automatic battle
+                 2. Manual battle
+                 3. Go back to party creation menu
+                 4. Quit
+                """);
+        System.out.print(currentMenu);
+        String menuChoice = console.next();
+
+        //valid options
+        String[] mainMenuOptions = {"1", "2","3", "4"};
+
+        //check if the input is one of the valid options
+        boolean validMainMenuOption = Arrays.asList(mainMenuOptions).contains(menuChoice);
+
+        //loop while input is an invalid option
+        while (!validMainMenuOption) {
+            System.out.println("This is not a valid option! Try again!");
+            System.out.println(currentMenu);
+            menuChoice = console.next();
+            validMainMenuOption = Arrays.asList(mainMenuOptions).contains(menuChoice);
+        }
+
+        // valid options decision tree
+        switch (menuChoice) {
+            // Auto battle
+            case "1" -> {
+                //Check if the parties are null
+                Predicate<Character> isAlive = Character -> Character.getHp() > 0;
+                List<Character> party1= firstParty.stream().filter(isAlive)
+                        .collect(Collectors.toList());
+                List<Character> party2= secondParty.stream().filter(isAlive)
+                        .collect(Collectors.toList());
+
+                if (party1.size() == 0 || party2.size() == 0) {
+                    System.out.println("Both parties cannot be empty to start a battle");
+                }
+
+                //Battle characters as long as one team has no more alive characters.
+                while (party1.size() > 0 && party2.size() > 0){
+                    //choose random characters
+                    Random rand = new Random();
+                    Character char1=party1.get(rand.nextInt(party1.size()));
+                    Character char2=party2.get(rand.nextInt(party2.size()));
+                    //implement battle method
+                    char1.setHp(0);
+                    char2.setHp(0);
+                    System.out.println(char1.getName()+" dies");
+                    System.out.println(char2.getName()+" dies");
+                    //again filter parties for alive champions
+                    party1= party1.stream().filter(isAlive)
+                            .collect(Collectors.toList());
+                    party2= party2.stream().filter(isAlive)
+                            .collect(Collectors.toList());
+                }
+
+                if(party1.size()==0 && party2.size()==0) {
+                    Graphics.graphicsAllDead();
+                    System.out.println("Both parties died at the same time! there were no survivors!");
+                }else if(party1.size()!=0){
+                    Graphics.graphicsSecondDead();
+                    System.out.println("The first Party won with surviving characters: "+party1);
+                } else {
+                    Graphics.graphicsFirstDead();
+                    System.out.println("The second Party won with surviving characters: "+party2);
+                }
+                //update main parties and go back to the menu
+                firstParty = party1;
+                secondParty = party2;
+                Menu.customPartyCreatorMenu();
+            }
+
+            //export parties to csv
+            case "2" -> {
+                if (firstParty == null || firstParty.size() == 0 || secondParty == null || secondParty.size() == 0) {
+                    System.out.println("You need to create parties first!");
+                    Menu.partyCreatorMenu();
+                } else {
+                    try {
+                        Menu.exportPartiesToCSV();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //confirm and go back to menu
+                    System.out.println("Parties exported to files");
+                    Menu.customPartyCreatorMenu();
+                }
+            }
+
+            //go back to partyCreatorMenu
+            case "3" -> partyCreatorMenu();
+
+            //quit the game - only for losers... and maybe beta testers
+            case "4" -> System.out.println("Looser!");
+            default -> {
+                System.out.println("This is not a valid option");
+                Menu.partyCreatorMenu();
+            }
+        }
+        console.close();
     }
 
     //Layer4 -- GraveyardMenu
@@ -615,6 +657,7 @@ public class Menu {
         int stamina = Integer.parseInt(console.next());
         System.out.println("Set strength");
         int strength = Integer.parseInt(console.next());
+        console.close();
         return new Warrior(name, hp, stamina, strength);
     }
 

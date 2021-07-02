@@ -1,4 +1,5 @@
 import java.util.UUID;
+import java.util.stream.Stream;
 
 abstract class Character {
   private UUID id;
