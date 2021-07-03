@@ -2,10 +2,10 @@
 Wizards vs Warriors (WvW) is a console based text game.
 User moves through the text menu by typing the number assigned to desired option and confirming with Enter key.
 For example main menu has following options:
-"
+
 1. Start a new game
 2. Quit
-"
+
 
 By typing 1 and confirming with Enter key, app will move user to the second menu. Similarly typing 2 and confirming with Enter key will close the app.
 
