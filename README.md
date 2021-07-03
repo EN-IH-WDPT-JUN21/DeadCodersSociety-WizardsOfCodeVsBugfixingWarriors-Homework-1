@@ -6,6 +6,7 @@ For example main menu has following options:
 1. Start a new game
 2. Quit
 "
+
 By typing 1 and confirming with Enter key, app will move user to the second menu. Similarly typing 2 and confirming with Enter key will close the app.
 
 WvW is based on rivalry between two teams consisting of characters from two classes: Wizards and Warriors.
