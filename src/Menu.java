@@ -112,7 +112,7 @@ public class Menu {
         String menuChoice = console.next();
 
         //valid options
-        String[] mainMenuOptions = {"1", "2","3", "4", "5", "enableGraphics", "imagination"};
+        String[] mainMenuOptions = {"1", "2","3", "4", "5", "6", "enableGraphics", "imagination"};
 
         //check if the input is one of the valid options
         boolean validMainMenuOption = Arrays.asList(mainMenuOptions).contains(menuChoice);
@@ -546,14 +546,15 @@ public class Menu {
                 Select mode for your battle:
                  1. Automatic battle
                  2. Manual battle
-                 3. Go back to party creation menu
-                 4. Quit
+                 3. Graveyard
+                 4. Go back to party creation menu
+                 5. Quit
                 """);
         System.out.print(currentMenu);
         String menuChoice = console.next();
 
         //valid options
-        String[] mainMenuOptions = {"1", "2","3", "4"};
+        String[] mainMenuOptions = {"1", "2","3", "4","5"};
 
         //check if the input is one of the valid options
         boolean validMainMenuOption = Arrays.asList(mainMenuOptions).contains(menuChoice);
@@ -579,6 +580,7 @@ public class Menu {
 
                 if (party1.size() == 0 || party2.size() == 0) {
                     System.out.println("Both parties cannot be empty to start a battle");
+                    battleMenu();
                 }
 
                 //Battle characters as long as one team has no more alive characters.
@@ -616,7 +618,7 @@ public class Menu {
                 //update main parties and go back to the menu
                 firstParty = party1;
                 secondParty = party2;
-                Menu.customPartyCreatorMenu();
+                Menu.battleMenu();
             }
 
             //Manual battle
@@ -630,6 +632,7 @@ public class Menu {
 
                 if (party1.size() == 0 || party2.size() == 0) {
                     System.out.println("Both parties cannot be empty to start a battle");
+                    battleMenu();
                 }
 
                 //Battle characters once
@@ -688,12 +691,15 @@ public class Menu {
                 secondParty = party2;
                 Menu.battleMenu();
             }
+            //print the graveyard
+            case "3" -> graveyardMenu();
+
 
             //go back to partyCreatorMenu
-            case "3" -> partyCreatorMenu();
+            case "4" -> partyCreatorMenu();
 
             //quit the game - only for losers... and maybe beta testers
-            case "4" -> System.out.println("Looser!");
+            case "5" -> System.out.println("Looser!");
             default -> {
                 System.out.println("This is not a valid option");
                 Menu.partyCreatorMenu();
@@ -706,6 +712,7 @@ public class Menu {
     public static void graveyardMenu() {
         System.out.println("Graveyard:" );
         System.out.println(PartyFormatter.getString(graveyard));
+        battleMenu();
     }
 
     //create custom Warrior
