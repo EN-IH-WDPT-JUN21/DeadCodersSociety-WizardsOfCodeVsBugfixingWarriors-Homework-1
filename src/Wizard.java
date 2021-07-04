@@ -1,4 +1,4 @@
-public class Wizard extends Character {
+public class Wizard extends Character implements Attacker {
   private int mana;
   private int intelligence;
 
@@ -23,13 +23,17 @@ public class Wizard extends Character {
         + intelligence
         + '}';
   }
+
   public String exportCharacter() {
     return "Wizard,"
-//            + getId().toString().substring(1, 8)+","
-            + getName()+","
-            + getHp()+","
-            + mana+","
-            + intelligence;
+        //            + getId().toString().substring(1, 8)+","
+        + getName()
+        + ","
+        + getHp()
+        + ","
+        + mana
+        + ","
+        + intelligence;
   }
 
   public int getMana() {
@@ -46,5 +50,16 @@ public class Wizard extends Character {
 
   public void setIntelligence(int intelligence) {
     this.intelligence = intelligence;
+  }
+
+  @Override
+  public int attack() {
+    if (mana >= 5) {
+      mana -= 5;
+      return intelligence;
+    } else {
+      mana += 1;
+      return 2;
+    }
   }
 }

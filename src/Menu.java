@@ -223,8 +223,8 @@ public class Menu {
             //Generate random parties up to limit size
             case "1" -> {
                 //invoke method to create random parties
-                var nameGen = new NameListGenerator("names.csv");
-                var names = nameGen.getNames();
+                var nameGen = new LinesGenerator("names.csv");
+                var names = nameGen.getLines();
                 var gen = new RandomCharacterGenerator(names);
                 List<Character> party1 = new ArrayList<>();
                 List<Character> party2 = new ArrayList<>();
@@ -252,8 +252,8 @@ public class Menu {
 
             //Decide party sizes
             case "2" -> {
-                var nameGen = new NameListGenerator("names.csv");
-                var names = nameGen.getNames();
+                var nameGen = new LinesGenerator("names.csv");
+                var names = nameGen.getLines();
                 var gen = new RandomCharacterGenerator(names);
                 List<Character> party1 = new ArrayList<>();
                 List<Character> party2 = new ArrayList<>();

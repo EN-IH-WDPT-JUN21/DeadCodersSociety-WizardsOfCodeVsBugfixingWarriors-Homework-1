@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class NameListGenerator {
+public class LinesGenerator {
   private String SourceFile;
 
-  public NameListGenerator(String sourceFile) {
+  public LinesGenerator(String sourceFile) {
     SourceFile = sourceFile;
   }
 
-  public List<String> getNames() {
+  public List<String> getLines() {
     List<String> list = new ArrayList<>();
 
     File file = new File(SourceFile);
