@@ -242,9 +242,10 @@ public class Menu {
                     gen.addRandomCharacterToParty(party2);
                 }
                 System.out.println("Random parties created!");
-                System.out.println("Party1: " + party1);
-                System.out.println();
-                System.out.println("Party2: " + party2);
+                System.out.println("Party1: ");
+                System.out.println(PartyFormatter.getString(party1));
+                System.out.println("Party2: ");
+                System.out.println(PartyFormatter.getString(party2));
                 firstParty = party1;
                 secondParty = party2;
                 Menu.randomPartyCreatorMenu();
@@ -290,9 +291,11 @@ public class Menu {
                     gen.addRandomCharacterToParty(party2);
                 }
                 System.out.println("Random parties created!");
-                System.out.println("Party1: " + party1);
+                System.out.println("Party1: ");
+                System.out.println(PartyFormatter.getString(party1));
                 System.out.println();
-                System.out.println("Party2: " + party2);
+                System.out.println("Party2: ");
+                System.out.println(PartyFormatter.getString(party2));
 
                 //store created parties in class fields
                 firstParty = party1;
@@ -599,10 +602,12 @@ public class Menu {
                     System.out.println("Both parties died at the same time! there were no survivors!");
                 }else if(party1.size()!=0){
                     Graphics.graphicsSecondDead();
-                    System.out.println("The first Party won with surviving characters: "+party1);
+                    System.out.println("The first Party won with surviving characters: ");
+                    System.out.println(PartyFormatter.getString(party1));
                 } else {
                     Graphics.graphicsFirstDead();
-                    System.out.println("The second Party won with surviving characters: "+party2);
+                    System.out.println("The second Party won with surviving characters: ");
+                    System.out.println(PartyFormatter.getString(party2));
                 }
                 //update main parties and go back to the menu
                 firstParty = party1;
@@ -610,21 +615,71 @@ public class Menu {
                 Menu.customPartyCreatorMenu();
             }
 
-            //export parties to csv
+            //Manual battle
             case "2" -> {
-                if (firstParty == null || firstParty.size() == 0 || secondParty == null || secondParty.size() == 0) {
-                    System.out.println("You need to create parties first!");
-                    Menu.partyCreatorMenu();
-                } else {
-                    try {
-                        Menu.exportPartiesToCSV();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //confirm and go back to menu
-                    System.out.println("Parties exported to files");
-                    Menu.customPartyCreatorMenu();
+                //Check if the parties are null
+                Predicate<Character> isAlive = Character -> Character.getHp() > 0;
+                List<Character> party1= firstParty.stream().filter(isAlive)
+                    .collect(Collectors.toList());
+                List<Character> party2= secondParty.stream().filter(isAlive)
+                    .collect(Collectors.toList());
+
+                if (party1.size() == 0 || party2.size() == 0) {
+                    System.out.println("Both parties cannot be empty to start a battle");
                 }
+
+                //Battle characters once
+                //choose characters
+                System.out.println("Choose a fighter from party 1 (using index):");
+                System.out.println(PartyFormatter.getString(party1));
+
+                String strN = console.next();
+                //loop while user input is invalid type or party size is <=0
+                while (Main.isNumeric(strN) || Integer.parseInt(strN) <= 0 || Integer.parseInt(strN) > party1.size() ) {
+                    System.out.println("This is not a valid character index! Try again!");
+                    strN = console.next();
+                }
+                int chIdx1 =  Integer.parseInt(strN) -1 ;
+                Character char1=party1.get(chIdx1);
+
+                System.out.println("Choose a fighter from party 2 (using index):");
+                System.out.println(PartyFormatter.getString(party2));
+
+                strN = console.next();
+                //loop while user input is invalid type or party size is <=0
+                while (Main.isNumeric(strN) || Integer.parseInt(strN) <= 0 || Integer.parseInt(strN) > party2.size() ) {
+                    System.out.println("This is not a valid character index! Try again!");
+                    strN = console.next();
+                }
+                int chIdx2 =  Integer.parseInt(strN) -1 ;
+                Character char2=party2.get(chIdx2);
+
+                //battle
+                var battleCries = new LinesGenerator("battle_cries.csv").getLines();
+                var battle = new Battle(battleCries, 300);
+                battle.duel(char1, char2);
+                //again filter parties for alive champions
+                party1= party1.stream().filter(isAlive)
+                    .collect(Collectors.toList());
+                party2= party2.stream().filter(isAlive)
+                    .collect(Collectors.toList());
+
+                if(!char1.isAlive() && !char2.isAlive()) {
+                    Graphics.graphicsAllDead();
+                    System.out.println("Both fighters died at the same time! there were no survivors!");
+                }else if(!char2.isAlive()){
+                    Graphics.graphicsSecondDead();
+                    System.out.println("The first Party won with surviving characters: ");
+                    System.out.println(PartyFormatter.getString(party1));
+                } else {
+                    Graphics.graphicsFirstDead();
+                    System.out.println("The second Party won with surviving characters: ");
+                    System.out.println(PartyFormatter.getString(party2));
+                }
+                //update main parties and go back to the menu
+                firstParty = party1;
+                secondParty = party2;
+                Menu.battleMenu();
             }
 
             //go back to partyCreatorMenu
