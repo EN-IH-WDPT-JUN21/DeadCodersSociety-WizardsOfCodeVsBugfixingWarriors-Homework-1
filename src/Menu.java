@@ -223,8 +223,8 @@ public class Menu {
             //Generate random parties up to limit size
             case "1" -> {
                 //invoke method to create random parties
-                var nameGen = new NameListGenerator("names.csv");
-                var names = nameGen.getNames();
+                var nameGen = new LinesGenerator("names.csv");
+                var names = nameGen.getLines();
                 var gen = new RandomCharacterGenerator(names);
                 List<Character> party1 = new ArrayList<>();
                 List<Character> party2 = new ArrayList<>();
@@ -252,8 +252,8 @@ public class Menu {
 
             //Decide party sizes
             case "2" -> {
-                var nameGen = new NameListGenerator("names.csv");
-                var names = nameGen.getNames();
+                var nameGen = new LinesGenerator("names.csv");
+                var names = nameGen.getLines();
                 var gen = new RandomCharacterGenerator(names);
                 List<Character> party1 = new ArrayList<>();
                 List<Character> party2 = new ArrayList<>();
@@ -583,11 +583,10 @@ public class Menu {
                     Random rand = new Random();
                     Character char1=party1.get(rand.nextInt(party1.size()));
                     Character char2=party2.get(rand.nextInt(party2.size()));
-                    //implement battle method
-                    char1.setHp(0);
-                    char2.setHp(0);
-                    System.out.println(char1.getName()+" dies");
-                    System.out.println(char2.getName()+" dies");
+                    //battle
+                    var battleCries = new LinesGenerator("battle_cries.csv").getLines();
+                    var battle = new Battle(battleCries, 300);
+                    battle.duel(char1, char2);
                     //again filter parties for alive champions
                     party1= party1.stream().filter(isAlive)
                             .collect(Collectors.toList());

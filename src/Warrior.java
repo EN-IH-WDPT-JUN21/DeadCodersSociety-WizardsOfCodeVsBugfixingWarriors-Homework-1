@@ -1,4 +1,4 @@
-public class Warrior extends Character {
+public class Warrior extends Character implements Attacker {
   private int stamina;
   private int strength;
 
@@ -26,13 +26,15 @@ public class Warrior extends Character {
 
   public String exportCharacter() {
     return "Warrior,"
-//            + getId().toString().substring(1, 8)+","
-            + getName()+","
-            + getHp()+","
-            + stamina+","
-            + strength;
+        //            + getId().toString().substring(1, 8)+","
+        + getName()
+        + ","
+        + getHp()
+        + ","
+        + stamina
+        + ","
+        + strength;
   }
-
 
   public int getStamina() {
     return stamina;
@@ -50,4 +52,14 @@ public class Warrior extends Character {
     this.strength = strength;
   }
 
+  @Override
+  public Damage attack() {
+    if (stamina >= 5) {
+      stamina -= 5;
+      return new Damage(strength, DamageType.HEAVY_ATTACK);
+    } else {
+      stamina += 1;
+      return new Damage(strength / 2, DamageType.WEAK_ATTACK);
+    }
+  }
 }

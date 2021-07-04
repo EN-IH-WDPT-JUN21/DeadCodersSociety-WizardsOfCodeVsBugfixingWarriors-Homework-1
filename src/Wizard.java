@@ -1,4 +1,6 @@
-public class Wizard extends Character {
+import java.util.Date;
+
+public class Wizard extends Character implements Attacker {
   private int mana;
   private int intelligence;
 
@@ -23,13 +25,17 @@ public class Wizard extends Character {
         + intelligence
         + '}';
   }
+
   public String exportCharacter() {
     return "Wizard,"
-//            + getId().toString().substring(1, 8)+","
-            + getName()+","
-            + getHp()+","
-            + mana+","
-            + intelligence;
+        //            + getId().toString().substring(1, 8)+","
+        + getName()
+        + ","
+        + getHp()
+        + ","
+        + mana
+        + ","
+        + intelligence;
   }
 
   public int getMana() {
@@ -46,5 +52,16 @@ public class Wizard extends Character {
 
   public void setIntelligence(int intelligence) {
     this.intelligence = intelligence;
+  }
+
+  @Override
+  public Damage attack() {
+    if (mana >= 5) {
+      mana -= 5;
+      return new Damage(intelligence, DamageType.FIREBALL);
+    } else {
+      mana += 1;
+      return new Damage(2, DamageType.STAFF_HIT);
+    }
   }
 }
