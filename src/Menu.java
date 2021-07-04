@@ -102,7 +102,7 @@ public class Menu {
                 How would you like to do it?
                  1. Generate random parties
                  2. Modify current or create custom parties
-                 3. Import parties from a file
+                 3. Import parties from files
                  4. Start Battle!
                  5. Go back
                  6. Quit
@@ -196,7 +196,7 @@ public class Menu {
                 How chaotic teams do you prefer?
                  1. Let the chaos reign! <generates random characters in random sized parties(max party size is 20)>
                  2. Decide the parties size.
-                 3. Export parties to a file
+                 3. Export parties to files
                  4. To Battle!
                  5. Go back
                  6. Quit
@@ -372,7 +372,7 @@ public class Menu {
         String currentMenu = ("""
                 Create your parties:
                  1. Modify current parties
-                 2. Export parties to a file
+                 2. Export parties to files
                  3. Go back
                  4. Quit
                 """);
@@ -643,10 +643,51 @@ public class Menu {
 
     //Layer4 -- GraveyardMenu
     public static void graveyardMenu() {
-        System.out.println("Graveyard menu is not ready!");
-    }
+        Scanner console = new Scanner(System.in);
+        String currentMenu = ("""
+                Select mode for your battle:
+                 1. View Graveyard
+                 2. Go back to main menu
+                 3. Quit
+                """);
+        System.out.print(currentMenu);
+        String menuChoice = console.next();
 
-    //create custom Warrior
+        //valid options
+        String[] mainMenuOptions = {"1", "2","3"};
+
+        //check if the input is one of the valid options
+        boolean validMainMenuOption = Arrays.asList(mainMenuOptions).contains(menuChoice);
+
+        //loop while input is an invalid option
+        while (!validMainMenuOption) {
+            System.out.println("This is not a valid option! Try again!");
+            System.out.println(currentMenu);
+            menuChoice = console.next();
+            validMainMenuOption = Arrays.asList(mainMenuOptions).contains(menuChoice);
+        }
+
+        // valid options decision tree
+        switch (menuChoice) {
+            // Auto battle
+            case "1" -> {
+            //implement Graveyard review menu
+                System.out.println("this is the temporary Graveyard");
+            }
+
+            //go back to mainMenu
+            case "2" -> mainMenu();
+
+            //quit the game - only for losers... and maybe beta testers
+            case "3" -> System.out.println("Bye!");
+            default -> {
+                System.out.println("This is not a valid option");
+                Menu.partyCreatorMenu();
+            }
+        }
+        console.close();
+    }
+   //create custom Warrior
     public static Warrior createNewWarrior(){
         Scanner console = new Scanner(System.in);
         System.out.println("Set name");
@@ -684,6 +725,7 @@ public class Menu {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //loop through the party and write objects to the file
         for (Character ch : firstParty) {
             if (firstParty.get(firstParty.indexOf(ch)).getClass()==Wizard.class){
                 Wizard wiz1= (Wizard) firstParty.get(firstParty.indexOf(ch));
@@ -700,7 +742,7 @@ public class Menu {
         csvWriter.flush();
         csvWriter.close();
 
-        //loop through second file and create valid class objects
+        //loop through the party and write objects to the file
         try {
             csvWriter = new FileWriter("secondParty.csv");
         } catch (IOException e) {
@@ -722,14 +764,19 @@ public class Menu {
 
     //import parties from csv files
     public static void importPartiesFromCSV() throws IOException {
+        //Create both parties
         List<Character> party1 = new ArrayList<>();
         List<Character> party2 = new ArrayList<>();
+        //Import first party
         try (BufferedReader br = new BufferedReader(new FileReader("firstParty.csv"))) {
             String line;
+            //Read through the file
             while ((line = br.readLine()) != null && !line.equals("")) {
+                //split file into lines
                 String[] values = line.split(";");
+                //split lines into fields
                 String[] v=values[0].split(",");
-
+                //call needed constructor based on a class from a file
                 if (v[0].equals("Wizard")) {
                     Wizard w1=new Wizard(v[1], Integer.parseInt(v[2]), Integer.parseInt(v[3]), Integer.parseInt(v[4]));
                     party1.add(w1);
@@ -741,12 +788,16 @@ public class Menu {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        //Import second party
         try (BufferedReader br = new BufferedReader(new FileReader("secondParty.csv"))) {
             String line;
+            //Read through the file
             while ((line = br.readLine()) != null && !line.equals("")) {
+                //split file into lines
                 String[] values = line.split(";");
+                //split lines into fields
                 String[] v=values[0].split(",");
+                //call needed constructor based on a class from a file
                 if (v[0].equals("Wizard" )) {
                     Wizard w1=new Wizard(v[1], Integer.parseInt(v[2]), Integer.parseInt(v[3]), Integer.parseInt(v[4]));
                     party2.add(w1);
@@ -758,6 +809,7 @@ public class Menu {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //assign temporary variables into application fields
         firstParty=party1;
         secondParty=party2;
     }
