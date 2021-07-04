@@ -11,8 +11,24 @@ public class Battle {
 
   public void duel(Character a, Character b) {
     while (a.isAlive() && b.isAlive()) round(a, b);
-    if (!a.isAlive()) System.out.println(a.getName() + " died!");
-    if (!b.isAlive()) System.out.println(b.getName() + " died!");
+    if (!a.isAlive())
+      System.out.println(
+          ConsoleColors.BLUE_BOLD
+              + a.getName()
+              + ConsoleColors.RESET
+              + " "
+              + ConsoleColors.RED_BACKGROUND_BRIGHT
+              + "died!"
+              + ConsoleColors.RESET);
+    if (!b.isAlive())
+      System.out.println(
+          ConsoleColors.GREEN_BOLD
+              + b.getName()
+              + ConsoleColors.RESET
+              + " "
+              + ConsoleColors.RED_BACKGROUND_BRIGHT
+              + "died!"
+              + ConsoleColors.RESET);
   }
 
   private void round(Character a, Character b) {
@@ -24,11 +40,49 @@ public class Battle {
     a.setHp(a.getHp() - dmgA);
     b.setHp(b.getHp() - dmgB);
 
-    System.out.println(a.getName() + ": " + getRandomBattleCry());
-    System.out.println(b.getName() + ": " + getRandomBattleCry());
+    System.out.println(
+        ConsoleColors.BLUE_BOLD
+            + a.getName()
+            + ConsoleColors.RESET
+            + ": "
+            + ConsoleColors.BLUE
+            + getRandomBattleCry()
+            + ConsoleColors.RESET);
+    System.out.println(
+        ConsoleColors.GREEN_BOLD
+            + b.getName()
+            + ConsoleColors.RESET
+            + ": "
+            + ConsoleColors.GREEN
+            + getRandomBattleCry()
+            + ConsoleColors.RESET);
 
-    System.out.println(a.getName() + " hits " + b.getName() + " for " + dmgB + "!");
-    System.out.println(b.getName() + " hits " + a.getName() + " for " + dmgA + "!");
+    System.out.println(
+        ConsoleColors.BLUE_BOLD
+            + a.getName()
+            + ConsoleColors.RESET
+            + " hits "
+            + ConsoleColors.GREEN_BOLD
+            + b.getName()
+            + ConsoleColors.RESET
+            + " for "
+            + ConsoleColors.RED_BOLD
+            + dmgB
+            + ConsoleColors.RESET
+            + "!");
+    System.out.println(
+        ConsoleColors.GREEN_BOLD
+            + b.getName()
+            + ConsoleColors.RESET
+            + " hits "
+            + ConsoleColors.BLUE_BOLD
+            + a.getName()
+            + ConsoleColors.RESET
+            + " for "
+            + ConsoleColors.RED_BOLD
+            + dmgA
+            + ConsoleColors.RESET
+            + "!");
   }
 
   private String getRandomBattleCry() {
@@ -38,21 +92,21 @@ public class Battle {
     return battleCry;
   }
 
-  //  public static void main(String[] args) {
-  //    var nameGen = new LinesGenerator("names.csv");
-  //    var names = nameGen.getLines();
-  //
-  //    var gen = new RandomCharacterGenerator(names);
-  //    var a = gen.getRandomCharacter();
-  //    var b = gen.getRandomCharacter();
-  //    System.out.println(a);
-  //    System.out.println(b);
-  //
-  //    var battleCries = new LinesGenerator("battle_cries.csv").getLines();
-  //    var battle = new Battle(battleCries);
-  //    battle.duel(a, b);
-  //
-  //    System.out.println(a);
-  //    System.out.println(b);
-  //  }
+  public static void main(String[] args) {
+    var nameGen = new LinesGenerator("names.csv");
+    var names = nameGen.getLines();
+
+    var gen = new RandomCharacterGenerator(names);
+    var a = gen.getRandomCharacter();
+    var b = gen.getRandomCharacter();
+    System.out.println(a);
+    System.out.println(b);
+
+    var battleCries = new LinesGenerator("battle_cries.csv").getLines();
+    var battle = new Battle(battleCries);
+    battle.duel(a, b);
+
+    System.out.println(a);
+    System.out.println(b);
+  }
 }
