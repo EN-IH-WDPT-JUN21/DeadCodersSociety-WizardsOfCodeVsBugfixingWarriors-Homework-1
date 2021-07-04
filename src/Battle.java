@@ -1,16 +1,26 @@
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class Battle {
 
   private final List<String> battleCries;
+  private int roundDelay;
 
-  public Battle(List<String> battleCries) {
+  public Battle(List<String> battleCries, int roundDelay) {
     this.battleCries = battleCries;
+    this.roundDelay = roundDelay;
   }
 
   public void duel(Character a, Character b) {
-    while (a.isAlive() && b.isAlive()) round(a, b);
+    while (a.isAlive() && b.isAlive()) {
+      try {
+        TimeUnit.MILLISECONDS.sleep(roundDelay);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      round(a, b);
+    }
     if (!a.isAlive())
       System.out.println(
           ConsoleColors.BLUE_BOLD
@@ -114,21 +124,21 @@ public class Battle {
     return battleCry;
   }
 
-  public static void main(String[] args) {
-    var nameGen = new LinesGenerator("names.csv");
-    var names = nameGen.getLines();
-
-    var gen = new RandomCharacterGenerator(names);
-    var a = gen.getRandomCharacter();
-    var b = gen.getRandomCharacter();
-    System.out.println(a);
-    System.out.println(b);
-
-    var battleCries = new LinesGenerator("battle_cries.csv").getLines();
-    var battle = new Battle(battleCries);
-    battle.duel(a, b);
-
-    System.out.println(a);
-    System.out.println(b);
-  }
+//  public static void main(String[] args) {
+//    var nameGen = new LinesGenerator("names.csv");
+//    var names = nameGen.getLines();
+//
+//    var gen = new RandomCharacterGenerator(names);
+//    var a = gen.getRandomCharacter();
+//    var b = gen.getRandomCharacter();
+//    System.out.println(a);
+//    System.out.println(b);
+//
+//    var battleCries = new LinesGenerator("battle_cries.csv").getLines();
+//    var battle = new Battle(battleCries, 300);
+//    battle.duel(a, b);
+//
+//    System.out.println(a);
+//    System.out.println(b);
+//  }
 }

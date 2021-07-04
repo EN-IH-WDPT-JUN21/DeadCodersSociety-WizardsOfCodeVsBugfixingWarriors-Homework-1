@@ -585,7 +585,7 @@ public class Menu {
                     Character char2=party2.get(rand.nextInt(party2.size()));
                     //battle
                     var battleCries = new LinesGenerator("battle_cries.csv").getLines();
-                    var battle = new Battle(battleCries);
+                    var battle = new Battle(battleCries, 300);
                     battle.duel(char1, char2);
                     //again filter parties for alive champions
                     party1= party1.stream().filter(isAlive)
