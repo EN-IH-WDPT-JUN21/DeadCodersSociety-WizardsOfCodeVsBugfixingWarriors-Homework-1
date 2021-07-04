@@ -1,3 +1,3 @@
 public interface Attacker {
-  int attack();
+  Damage attack();
 }

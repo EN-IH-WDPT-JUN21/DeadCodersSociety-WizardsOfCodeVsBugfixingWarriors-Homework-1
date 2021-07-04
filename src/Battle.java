@@ -35,10 +35,10 @@ public class Battle {
     Attacker aa = (Attacker) a;
     Attacker bb = (Attacker) b;
 
-    var dmgB = aa.attack();
-    var dmgA = bb.attack();
-    a.setHp(a.getHp() - dmgA);
-    b.setHp(b.getHp() - dmgB);
+    var dmgA = aa.attack();
+    var dmgB = bb.attack();
+    a.setHp(a.getHp() - dmgB.getDamage());
+    b.setHp(b.getHp() - dmgA.getDamage());
 
     System.out.println(
         ConsoleColors.BLUE_BOLD
@@ -65,9 +65,11 @@ public class Battle {
             + ConsoleColors.GREEN_BOLD
             + b.getName()
             + ConsoleColors.RESET
+            + " with "
+            + getDamageTypeText(dmgA)
             + " for "
             + ConsoleColors.RED_BOLD
-            + dmgB
+            + dmgA.getDamage()
             + ConsoleColors.RESET
             + "!");
     System.out.println(
@@ -78,11 +80,31 @@ public class Battle {
             + ConsoleColors.BLUE_BOLD
             + a.getName()
             + ConsoleColors.RESET
+            + " with "
+            + getDamageTypeText(dmgB)
             + " for "
             + ConsoleColors.RED_BOLD
-            + dmgA
+            + dmgB.getDamage()
             + ConsoleColors.RESET
             + "!");
+  }
+
+  private String getDamageTypeText(Damage damage) {
+    switch (damage.getType()) {
+      case HEAVY_ATTACK -> {
+        return ConsoleColors.YELLOW_BACKGROUND + "heavy attack" + ConsoleColors.RESET;
+      }
+      case WEAK_ATTACK -> {
+        return ConsoleColors.YELLOW + "weak (very weak) attack" + ConsoleColors.RESET;
+      }
+      case FIREBALL -> {
+        return ConsoleColors.BLUE_BACKGROUND + ConsoleColors.RED_BOLD_BRIGHT + "SWOOOOSH!!!!!!!!!!!! FIREBALLL!!!!" + ConsoleColors.RESET;
+      }
+      case STAFF_HIT -> {
+        return ConsoleColors.BLUE + "staff hit (on the head)" + ConsoleColors.RESET;
+      }
+      default -> throw new IllegalStateException("Unexpected value: " + damage.getType());
+    }
   }
 
   private String getRandomBattleCry() {

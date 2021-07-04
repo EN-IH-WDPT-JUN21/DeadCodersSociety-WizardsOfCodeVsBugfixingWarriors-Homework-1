@@ -53,13 +53,13 @@ public class Warrior extends Character implements Attacker {
   }
 
   @Override
-  public int attack() {
+  public Damage attack() {
     if (stamina >= 5) {
       stamina -= 5;
-      return strength;
+      return new Damage(strength, DamageType.HEAVY_ATTACK);
     } else {
       stamina += 1;
-      return strength / 2;
+      return new Damage(strength / 2, DamageType.WEAK_ATTACK);
     }
   }
 }

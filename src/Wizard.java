@@ -1,3 +1,5 @@
+import java.util.Date;
+
 public class Wizard extends Character implements Attacker {
   private int mana;
   private int intelligence;
@@ -53,13 +55,13 @@ public class Wizard extends Character implements Attacker {
   }
 
   @Override
-  public int attack() {
+  public Damage attack() {
     if (mana >= 5) {
       mana -= 5;
-      return intelligence;
+      return new Damage(intelligence, DamageType.FIREBALL);
     } else {
       mana += 1;
-      return 2;
+      return new Damage(2, DamageType.STAFF_HIT);
     }
   }
 }
