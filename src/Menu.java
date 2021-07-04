@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 public class Menu {
     private static List<Character> firstParty;
     private static List<Character> secondParty;
+    private static List<Character> graveyard = new ArrayList<>();
 
     //Layer1 -- mainMenu which will print the first screen and allow the user to choose next step
     public static void mainMenu() {
@@ -102,7 +103,7 @@ public class Menu {
                 How would you like to do it?
                  1. Generate random parties
                  2. Modify current or create custom parties
-                 3. Import parties from files
+                 3. Import parties from a file
                  4. Start Battle!
                  5. Go back
                  6. Quit
@@ -196,7 +197,7 @@ public class Menu {
                 How chaotic teams do you prefer?
                  1. Let the chaos reign! <generates random characters in random sized parties(max party size is 20)>
                  2. Decide the parties size.
-                 3. Export parties to files
+                 3. Export parties to a file
                  4. To Battle!
                  5. Go back
                  6. Quit
@@ -242,9 +243,10 @@ public class Menu {
                     gen.addRandomCharacterToParty(party2);
                 }
                 System.out.println("Random parties created!");
-                System.out.println("Party1: " + party1);
-                System.out.println();
-                System.out.println("Party2: " + party2);
+                System.out.println("Party1: ");
+                System.out.println(PartyFormatter.getString(party1));
+                System.out.println("Party2: ");
+                System.out.println(PartyFormatter.getString(party2));
                 firstParty = party1;
                 secondParty = party2;
                 Menu.randomPartyCreatorMenu();
@@ -290,9 +292,11 @@ public class Menu {
                     gen.addRandomCharacterToParty(party2);
                 }
                 System.out.println("Random parties created!");
-                System.out.println("Party1: " + party1);
+                System.out.println("Party1: ");
+                System.out.println(PartyFormatter.getString(party1));
                 System.out.println();
-                System.out.println("Party2: " + party2);
+                System.out.println("Party2: ");
+                System.out.println(PartyFormatter.getString(party2));
 
                 //store created parties in class fields
                 firstParty = party1;
@@ -372,7 +376,7 @@ public class Menu {
         String currentMenu = ("""
                 Create your parties:
                  1. Modify current parties
-                 2. Export parties to files
+                 2. Export parties to a file
                  3. Go back
                  4. Quit
                 """);
@@ -587,6 +591,9 @@ public class Menu {
                     var battleCries = new LinesGenerator("battle_cries.csv").getLines();
                     var battle = new Battle(battleCries, 300);
                     battle.duel(char1, char2);
+                    //dig graves
+                    if (!char1.isAlive()) graveyard.add(char1);
+                    if (!char2.isAlive()) graveyard.add(char2);
                     //again filter parties for alive champions
                     party1= party1.stream().filter(isAlive)
                             .collect(Collectors.toList());
@@ -599,10 +606,12 @@ public class Menu {
                     System.out.println("Both parties died at the same time! there were no survivors!");
                 }else if(party1.size()!=0){
                     Graphics.graphicsSecondDead();
-                    System.out.println("The first Party won with surviving characters: "+party1);
+                    System.out.println("The first Party won with surviving characters: ");
+                    System.out.println(PartyFormatter.getString(party1));
                 } else {
                     Graphics.graphicsFirstDead();
-                    System.out.println("The second Party won with surviving characters: "+party2);
+                    System.out.println("The second Party won with surviving characters: ");
+                    System.out.println(PartyFormatter.getString(party2));
                 }
                 //update main parties and go back to the menu
                 firstParty = party1;
@@ -610,21 +619,74 @@ public class Menu {
                 Menu.customPartyCreatorMenu();
             }
 
-            //export parties to csv
+            //Manual battle
             case "2" -> {
-                if (firstParty == null || firstParty.size() == 0 || secondParty == null || secondParty.size() == 0) {
-                    System.out.println("You need to create parties first!");
-                    Menu.partyCreatorMenu();
-                } else {
-                    try {
-                        Menu.exportPartiesToCSV();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //confirm and go back to menu
-                    System.out.println("Parties exported to files");
-                    Menu.customPartyCreatorMenu();
+                //Check if the parties are null
+                Predicate<Character> isAlive = Character -> Character.getHp() > 0;
+                List<Character> party1= firstParty.stream().filter(isAlive)
+                    .collect(Collectors.toList());
+                List<Character> party2= secondParty.stream().filter(isAlive)
+                    .collect(Collectors.toList());
+
+                if (party1.size() == 0 || party2.size() == 0) {
+                    System.out.println("Both parties cannot be empty to start a battle");
                 }
+
+                //Battle characters once
+                //choose characters
+                System.out.println("Choose a fighter from party 1 (using index):");
+                System.out.println(PartyFormatter.getString(party1));
+
+                String strN = console.next();
+                //loop while user input is invalid type or party size is <=0
+                while (Main.isNumeric(strN) || Integer.parseInt(strN) <= 0 || Integer.parseInt(strN) > party1.size() ) {
+                    System.out.println("This is not a valid character index! Try again!");
+                    strN = console.next();
+                }
+                int chIdx1 =  Integer.parseInt(strN) -1 ;
+                Character char1=party1.get(chIdx1);
+
+                System.out.println("Choose a fighter from party 2 (using index):");
+                System.out.println(PartyFormatter.getString(party2));
+
+                strN = console.next();
+                //loop while user input is invalid type or party size is <=0
+                while (Main.isNumeric(strN) || Integer.parseInt(strN) <= 0 || Integer.parseInt(strN) > party2.size() ) {
+                    System.out.println("This is not a valid character index! Try again!");
+                    strN = console.next();
+                }
+                int chIdx2 =  Integer.parseInt(strN) -1 ;
+                Character char2=party2.get(chIdx2);
+
+                //battle
+                var battleCries = new LinesGenerator("battle_cries.csv").getLines();
+                var battle = new Battle(battleCries, 300);
+                battle.duel(char1, char2);
+                //dig graves
+                if (!char1.isAlive()) graveyard.add(char1);
+                if (!char2.isAlive()) graveyard.add(char2);
+                //again filter parties for alive champions
+                party1= party1.stream().filter(isAlive)
+                    .collect(Collectors.toList());
+                party2= party2.stream().filter(isAlive)
+                    .collect(Collectors.toList());
+
+                if(!char1.isAlive() && !char2.isAlive()) {
+                    Graphics.graphicsAllDead();
+                    System.out.println("Both fighters died at the same time! there were no survivors!");
+                }else if(!char2.isAlive()){
+                    Graphics.graphicsSecondDead();
+                    System.out.println("The first Party won with surviving characters: ");
+                    System.out.println(PartyFormatter.getString(party1));
+                } else {
+                    Graphics.graphicsFirstDead();
+                    System.out.println("The second Party won with surviving characters: ");
+                    System.out.println(PartyFormatter.getString(party2));
+                }
+                //update main parties and go back to the menu
+                firstParty = party1;
+                secondParty = party2;
+                Menu.battleMenu();
             }
 
             //go back to partyCreatorMenu
@@ -642,51 +704,11 @@ public class Menu {
 
     //Layer4 -- GraveyardMenu
     public static void graveyardMenu() {
-        Scanner console = new Scanner(System.in);
-        String currentMenu = ("""
-                Select mode for your battle:
-                 1. View Graveyard
-                 2. Go back to main menu
-                 3. Quit
-                """);
-        System.out.print(currentMenu);
-        String menuChoice = console.next();
-
-        //valid options
-        String[] mainMenuOptions = {"1", "2","3"};
-
-        //check if the input is one of the valid options
-        boolean validMainMenuOption = Arrays.asList(mainMenuOptions).contains(menuChoice);
-
-        //loop while input is an invalid option
-        while (!validMainMenuOption) {
-            System.out.println("This is not a valid option! Try again!");
-            System.out.println(currentMenu);
-            menuChoice = console.next();
-            validMainMenuOption = Arrays.asList(mainMenuOptions).contains(menuChoice);
-        }
-
-        // valid options decision tree
-        switch (menuChoice) {
-            // Auto battle
-            case "1" -> {
-            //implement Graveyard review menu
-                System.out.println("this is the temporary Graveyard");
-            }
-
-            //go back to mainMenu
-            case "2" -> mainMenu();
-
-            //quit the game - only for losers... and maybe beta testers
-            case "3" -> System.out.println("Bye!");
-            default -> {
-                System.out.println("This is not a valid option");
-                Menu.partyCreatorMenu();
-            }
-        }
-        console.close();
+        System.out.println("Graveyard:" );
+        System.out.println(PartyFormatter.getString(graveyard));
     }
-   //create custom Warrior
+
+    //create custom Warrior
     public static Warrior createNewWarrior(){
         Scanner console = new Scanner(System.in);
         System.out.println("Set name");
@@ -724,7 +746,6 @@ public class Menu {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //loop through the party and write objects to the file
         for (Character ch : firstParty) {
             if (firstParty.get(firstParty.indexOf(ch)).getClass()==Wizard.class){
                 Wizard wiz1= (Wizard) firstParty.get(firstParty.indexOf(ch));
@@ -741,7 +762,7 @@ public class Menu {
         csvWriter.flush();
         csvWriter.close();
 
-        //loop through the party and write objects to the file
+        //loop through second file and create valid class objects
         try {
             csvWriter = new FileWriter("secondParty.csv");
         } catch (IOException e) {
@@ -763,19 +784,14 @@ public class Menu {
 
     //import parties from csv files
     public static void importPartiesFromCSV() throws IOException {
-        //Create both parties
         List<Character> party1 = new ArrayList<>();
         List<Character> party2 = new ArrayList<>();
-        //Import first party
         try (BufferedReader br = new BufferedReader(new FileReader("firstParty.csv"))) {
             String line;
-            //Read through the file
             while ((line = br.readLine()) != null && !line.equals("")) {
-                //split file into lines
                 String[] values = line.split(";");
-                //split lines into fields
                 String[] v=values[0].split(",");
-                //call needed constructor based on a class from a file
+
                 if (v[0].equals("Wizard")) {
                     Wizard w1=new Wizard(v[1], Integer.parseInt(v[2]), Integer.parseInt(v[3]), Integer.parseInt(v[4]));
                     party1.add(w1);
@@ -787,16 +803,12 @@ public class Menu {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //Import second party
+
         try (BufferedReader br = new BufferedReader(new FileReader("secondParty.csv"))) {
             String line;
-            //Read through the file
             while ((line = br.readLine()) != null && !line.equals("")) {
-                //split file into lines
                 String[] values = line.split(";");
-                //split lines into fields
                 String[] v=values[0].split(",");
-                //call needed constructor based on a class from a file
                 if (v[0].equals("Wizard" )) {
                     Wizard w1=new Wizard(v[1], Integer.parseInt(v[2]), Integer.parseInt(v[3]), Integer.parseInt(v[4]));
                     party2.add(w1);
@@ -808,7 +820,6 @@ public class Menu {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //assign temporary variables into application fields
         firstParty=party1;
         secondParty=party2;
     }

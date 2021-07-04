@@ -24,6 +24,7 @@ public class ConsoleColors {
   public static final String WHITE_BOLD = "\033[1;37m"; // WHITE
 
   // Underline
+  public static final String UNDERLINED = "\033[4m";
   public static final String BLACK_UNDERLINED = "\033[4;30m"; // BLACK
   public static final String RED_UNDERLINED = "\033[4;31m"; // RED
   public static final String GREEN_UNDERLINED = "\033[4;32m"; // GREEN
