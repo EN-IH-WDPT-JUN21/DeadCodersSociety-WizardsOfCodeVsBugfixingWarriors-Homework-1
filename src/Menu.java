@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 public class Menu {
     private static List<Character> firstParty;
     private static List<Character> secondParty;
+    private static List<Character> graveyard = new ArrayList<>();
 
     //Layer1 -- mainMenu which will print the first screen and allow the user to choose next step
     public static void mainMenu() {
@@ -590,6 +591,9 @@ public class Menu {
                     var battleCries = new LinesGenerator("battle_cries.csv").getLines();
                     var battle = new Battle(battleCries, 300);
                     battle.duel(char1, char2);
+                    //dig graves
+                    if (!char1.isAlive()) graveyard.add(char1);
+                    if (!char2.isAlive()) graveyard.add(char2);
                     //again filter parties for alive champions
                     party1= party1.stream().filter(isAlive)
                             .collect(Collectors.toList());
@@ -658,6 +662,9 @@ public class Menu {
                 var battleCries = new LinesGenerator("battle_cries.csv").getLines();
                 var battle = new Battle(battleCries, 300);
                 battle.duel(char1, char2);
+                //dig graves
+                if (!char1.isAlive()) graveyard.add(char1);
+                if (!char2.isAlive()) graveyard.add(char2);
                 //again filter parties for alive champions
                 party1= party1.stream().filter(isAlive)
                     .collect(Collectors.toList());
@@ -697,7 +704,8 @@ public class Menu {
 
     //Layer4 -- GraveyardMenu
     public static void graveyardMenu() {
-        System.out.println("Graveyard menu is not ready!");
+        System.out.println("Graveyard:" );
+        System.out.println(PartyFormatter.getString(graveyard));
     }
 
     //create custom Warrior
