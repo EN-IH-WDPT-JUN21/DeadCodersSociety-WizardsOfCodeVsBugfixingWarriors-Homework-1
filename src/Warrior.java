@@ -7,7 +7,7 @@ public class Warrior extends Character implements Attacker {
     setStamina(stamina);
     setStrength(strength);
   }
-
+  // For log printer
   @Override
   public String toString() {
     return "Warrior{"
@@ -23,7 +23,7 @@ public class Warrior extends Character implements Attacker {
         + strength
         + '}';
   }
-
+  // For csv file
   public String exportCharacter() {
     return "Warrior,"
         //            + getId().toString().substring(1, 8)+","
@@ -52,6 +52,14 @@ public class Warrior extends Character implements Attacker {
     this.strength = strength;
   }
 
+  /*
+  Warriors are strong well armored characters that focus on the attribute strength.
+  Every round a warrior will try to do a “Heavy attack”.
+  The damage of a heavy attack is equals to their strength and every hit will decrease their stamina by 5 points.
+  If he can’t make a heavy attack he will do a “Weak attack”.
+  The damage of a weak attack is the half of the strength (truncate decimals).
+  Every weak attack will recover his stamina by 1.
+   */
   @Override
   public Damage attack() {
     if (stamina >= 5) {

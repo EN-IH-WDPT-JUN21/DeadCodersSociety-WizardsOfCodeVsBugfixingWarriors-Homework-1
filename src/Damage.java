@@ -4,7 +4,9 @@ enum DamageType {
   FIREBALL,
   STAFF_HIT
 }
-
+/*
+represents damage type and value; used in Battle
+ */
 public class Damage {
   private final int damage;
   private final DamageType type;

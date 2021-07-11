@@ -1,6 +1,9 @@
 import java.util.List;
 
 public class PartyFormatter {
+  /*
+  returns character description using ANSI colors
+   */
   public static String getString(Character character) {
     String result = "";
     String tail = "";
@@ -43,7 +46,9 @@ public class PartyFormatter {
             + ")";
     return result;
   }
-
+  /*
+  returns multiLine party description using ANSI colors
+   */
   public static String getString(List<Character> party) {
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < party.size(); i++) {

@@ -5,13 +5,16 @@ import java.util.concurrent.TimeUnit;
 public class Battle {
 
   private final List<String> battleCries;
+  //delay the log outputs for x milliseconds between each round
   private final int roundDelay;
 
   public Battle(List<String> battleCries, int roundDelay) {
     this.battleCries = battleCries;
     this.roundDelay = roundDelay;
   }
-
+/*
+series of battle rounds until somebody dies
+ */
   public void duel(Character a, Character b) {
     while (a.isAlive() && b.isAlive()) {
       try {
@@ -40,7 +43,9 @@ public class Battle {
               + "died!"
               + ConsoleColors.RESET);
   }
-
+/*
+calculates the round of battle (both combatants attack at the same time)
+ */
   private void round(Character a, Character b) {
     Attacker aa = (Attacker) a;
     Attacker bb = (Attacker) b;
@@ -98,7 +103,9 @@ public class Battle {
             + ConsoleColors.RESET
             + "!");
   }
-
+/*
+returns colorized damage type description (using ANSI colors)
+ */
   private String getDamageTypeText(Damage damage) {
     switch (damage.getType()) {
       case HEAVY_ATTACK -> {
@@ -116,7 +123,9 @@ public class Battle {
       default -> throw new IllegalStateException("Unexpected value: " + damage.getType());
     }
   }
-
+/*
+returns random battle cry from the list
+ */
   private String getRandomBattleCry() {
     Random rand = new Random();
     int randomIndex = rand.nextInt(battleCries.size());
