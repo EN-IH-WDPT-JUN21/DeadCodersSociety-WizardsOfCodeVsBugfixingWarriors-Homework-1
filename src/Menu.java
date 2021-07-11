@@ -7,6 +7,8 @@ public class Menu {
     private static List<Character> firstParty;
     private static List<Character> secondParty;
     private static final List<Character> graveyard = new ArrayList<>();
+    private static final int AUTO_BATTLE_DELAY = 0;
+    private static final int MANUAL_BATTLE_DELAY = 300;
 
     //Layer1 -- mainMenu which will print the first screen and allow the user to choose next step
     public static void mainMenu() {
@@ -591,7 +593,7 @@ public class Menu {
                     Character char2=party2.get(rand.nextInt(party2.size()));
                     //battle
                     var battleCries = new LinesGenerator("battle_cries.csv").getLines();
-                    var battle = new Battle(battleCries, 300);
+                    var battle = new Battle(battleCries, AUTO_BATTLE_DELAY);
                     battle.duel(char1, char2);
                     //dig graves
                     if (!char1.isAlive()) graveyard.add(char1);
@@ -663,7 +665,7 @@ public class Menu {
 
                 //battle
                 var battleCries = new LinesGenerator("battle_cries.csv").getLines();
-                var battle = new Battle(battleCries, 300);
+                var battle = new Battle(battleCries, MANUAL_BATTLE_DELAY);
                 battle.duel(char1, char2);
                 //dig graves
                 if (!char1.isAlive()) graveyard.add(char1);
