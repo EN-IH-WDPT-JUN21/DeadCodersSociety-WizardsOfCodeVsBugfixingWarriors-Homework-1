@@ -6,8 +6,8 @@ enum DamageType {
 }
 
 public class Damage {
-  private int damage;
-  private DamageType type;
+  private final int damage;
+  private final DamageType type;
 
   public Damage(int damage, DamageType type) {
     this.damage = damage;

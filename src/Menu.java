@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 public class Menu {
     private static List<Character> firstParty;
     private static List<Character> secondParty;
-    private static List<Character> graveyard = new ArrayList<>();
+    private static final List<Character> graveyard = new ArrayList<>();
 
     //Layer1 -- mainMenu which will print the first screen and allow the user to choose next step
     public static void mainMenu() {

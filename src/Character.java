@@ -1,8 +1,7 @@
 import java.util.UUID;
-import java.util.stream.Stream;
 
 abstract class Character {
-  private UUID id;
+  private final UUID id;
   private String Name;
   private int hp;
 
@@ -35,6 +34,4 @@ abstract class Character {
   public boolean isAlive() {
     return hp > 0;
   }
-
-
 }

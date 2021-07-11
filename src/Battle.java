@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 public class Battle {
 
   private final List<String> battleCries;
-  private int roundDelay;
+  private final int roundDelay;
 
   public Battle(List<String> battleCries, int roundDelay) {
     this.battleCries = battleCries;
@@ -120,8 +120,7 @@ public class Battle {
   private String getRandomBattleCry() {
     Random rand = new Random();
     int randomIndex = rand.nextInt(battleCries.size());
-    String battleCry = battleCries.get(randomIndex);
-    return battleCry;
+    return battleCries.get(randomIndex);
   }
 
 //  public static void main(String[] args) {

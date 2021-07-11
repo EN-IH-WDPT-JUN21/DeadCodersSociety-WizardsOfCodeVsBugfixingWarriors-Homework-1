@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class LinesGenerator {
-  private String SourceFile;
+  private final String SourceFile;
 
   public LinesGenerator(String sourceFile) {
     SourceFile = sourceFile;

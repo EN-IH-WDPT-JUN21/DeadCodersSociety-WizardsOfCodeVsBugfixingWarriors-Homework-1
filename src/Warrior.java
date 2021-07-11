@@ -4,8 +4,8 @@ public class Warrior extends Character implements Attacker {
 
   public Warrior(String name, int hp, int stamina, int strength) {
     super(name, hp);
-    this.stamina = stamina;
-    this.strength = strength;
+    setStamina(stamina);
+    setStrength(strength);
   }
 
   @Override
