@@ -1,24 +1,38 @@
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class RandomCharacterGenerator {
   private final List<String> names;
-
+  /*
+  Gets list of names from f.e. names.csv using LinesGenerator
+   */
   public RandomCharacterGenerator(List<String> names) {
     this.names = names;
   }
 
+  /*
+  name: based on an array of names, pick a random position
+  hp: random between 100-200 to warriors, 50-100 for wizards)
+  mana: random between 10-50
+  intelligence: random between 1-50
+   */
   public Wizard getRandomWizard() {
     Random rand = new Random();
     int randomIndex = rand.nextInt(names.size());
     String name = names.get(randomIndex);
+    // rand.nextInt(51) returns value between 0 and 50(including)
     int hp = rand.nextInt(51) + 50;
     int mana = rand.nextInt(41) + 10;
     int intelligence = rand.nextInt(50) + 1;
     return new Wizard(name, hp, mana, intelligence);
   }
 
+  /*
+  name: based on an array of names, pick a random position
+  hp: random between 100-200 to warriors, 50-100 for wizards)
+  stamina: random between 10-50
+  strength: random between 1-10
+   */
   public Warrior getRandomWarrior() {
     Random rand = new Random();
     int randomIndex = rand.nextInt(names.size());
@@ -29,6 +43,9 @@ public class RandomCharacterGenerator {
     return new Warrior(name, hp, stamina, strength);
   }
 
+  /*
+  returns random character of random class
+   */
   public Character getRandomCharacter() {
     Random rand = new Random();
     int n = rand.nextInt(2);
@@ -39,6 +56,10 @@ public class RandomCharacterGenerator {
     }
   }
 
+  /*
+  add random character to an existing party
+  and if name is already in the party add Jr at the end.
+   */
   public void addRandomCharacterToParty(List<Character> party) {
     Character newGuy = getRandomCharacter();
     for (Character ch : party) {

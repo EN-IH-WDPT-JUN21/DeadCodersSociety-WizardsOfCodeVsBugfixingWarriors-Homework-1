@@ -4,10 +4,12 @@ enum DamageType {
   FIREBALL,
   STAFF_HIT
 }
-
+/*
+represents damage type and value; used in Battle
+ */
 public class Damage {
-  private int damage;
-  private DamageType type;
+  private final int damage;
+  private final DamageType type;
 
   public Damage(int damage, DamageType type) {
     this.damage = damage;
