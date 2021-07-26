@@ -728,7 +728,6 @@ public class Menu {
         int stamina = Integer.parseInt(console.next());
         System.out.println("Set strength");
         int strength = Integer.parseInt(console.next());
-        console.close();
         return new Warrior(name, hp, stamina, strength);
     }
 
